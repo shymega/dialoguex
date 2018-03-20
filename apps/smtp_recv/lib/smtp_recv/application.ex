@@ -9,9 +9,11 @@ defmodule SMTPRecv.Application do
     # List all child processes to be supervised
     smtp_server = %{
       id: :gen_smtp_server,
-      start: {:gen_smtp_server, :start_link,
-        [SMTPRecv.SMTPServer, Application.get_env(
-          :smtp_recv, :smtp_opts)]}}
+      start:
+        {:gen_smtp_server, :start_link,
+         [SMTPRecv.SMTPServer, Application.get_env(:smtp_recv, :smtp_opts)]}
+    }
+
     children = [
       smtp_server
     ]
