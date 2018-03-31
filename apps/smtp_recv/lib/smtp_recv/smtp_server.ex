@@ -4,7 +4,6 @@ defmodule SMTPRecv.SMTPServer do
   Part of Dialoguex.
   """
 
-  alias Mail.Parsers.RFC2822
   require IEx
   require Logger
 
@@ -22,11 +21,11 @@ defmodule SMTPRecv.SMTPServer do
     end
   end
 
-  def handle_DATA(from, to, data, state) do
+  def handle_DATA(_from, _to, data, state) do
     Logger.debug(fn -> "Received DATA message. Processing." end)
     Logger.debug(fn -> "Parsing message." end)
     data_parsed = parse_email(data)
-    Logger.debug(fn -> "Message parsed!" end)
+    Logger.debug( fn -> "Message parsed!" end)
 
     Logger.debug(fn ->
       "Updating state."
@@ -44,8 +43,6 @@ defmodule SMTPRecv.SMTPServer do
     Logger.debug(fn ->
       "Finished DATA handling."
     end)
-
-    IEx.pry()
 
     {:ok, data, state}
   end
@@ -117,13 +114,14 @@ defmodule SMTPRecv.SMTPServer do
   end
 
   def parse_email(data) when is_binary(data) do
-    data
-    |> convert_crlf
-    |> RFC2822.parse()
+    if !String.contains?(data, "\r") do
+      data |> convert_crlf() |> Mail.Parsers.RFC2822.parse()
+    else
+      data |> Mail.Parsers.RFC2822.parse()
+    end
   end
 
-  defp convert_crlf(text) when is_binary(text) do
-    text
-    |> String.replace("\n", "\r\n")
+  def convert_crlf(text) when is_binary(text) do
+    text |> String.replace("\n", "\r\n")
   end
 end
