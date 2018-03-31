@@ -19,7 +19,7 @@ defmodule SMTPRecv.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {SMTPRecv.Application, []}
+      mod: {SMTPRecv, []}
     ]
   end
 

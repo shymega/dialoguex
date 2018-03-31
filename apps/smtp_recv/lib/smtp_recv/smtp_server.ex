@@ -5,7 +5,9 @@ defmodule SMTPRecv.SMTPServer do
   """
 
   alias Mail.Parsers.RFC2822
+  require IEx
   require Logger
+
   @behaviour :gen_smtp_server_session
 
   def init(hostname, session_count, _address, _options) do
@@ -23,7 +25,7 @@ defmodule SMTPRecv.SMTPServer do
   def handle_DATA(from, to, data, state) do
     Logger.debug(fn -> "Received DATA message. Processing." end)
     Logger.debug(fn -> "Parsing message." end)
-    data_parsed = RFC2822.parse(data)
+    data_parsed = parse_email(data)
     Logger.debug(fn -> "Message parsed!" end)
 
     Logger.debug(fn ->
@@ -42,6 +44,8 @@ defmodule SMTPRecv.SMTPServer do
     Logger.debug(fn ->
       "Finished DATA handling."
     end)
+
+    IEx.pry()
 
     {:ok, data, state}
   end
@@ -95,7 +99,7 @@ defmodule SMTPRecv.SMTPServer do
       "Received VRFY request for address: #{address}"
     end)
 
-    {:ok, state}
+    {["500 error: wtf is : VRFY?"], state}
   end
 
   def handle_other(command, _args, state) do
@@ -110,5 +114,16 @@ defmodule SMTPRecv.SMTPServer do
   def terminate(reason, state) do
     Logger.info("Terminating Session: #{reason}")
     {:ok, state}
+  end
+
+  def parse_email(data) when is_binary(data) do
+    data
+    |> convert_crlf
+    |> RFC2822.parse()
+  end
+
+  defp convert_crlf(text) when is_binary(text) do
+    text
+    |> String.replace("\n", "\r\n")
   end
 end
