@@ -5,8 +5,12 @@ defmodule SMTPRecv.SMTPServer do
   """
 
   alias Mail.Parsers.RFC2822
-  require IEx
   require Logger
+  require IEx
+
+  alias Ecto.Changeset
+  alias MailStore.DB.Repo
+  alias MailStore.DB.Models.{Header, HeaderKey, HeaderValue}
 
   @behaviour :gen_smtp_server_session
 
@@ -17,8 +21,7 @@ defmodule SMTPRecv.SMTPServer do
       {:stop, :normal, ["421", hostname, " is unable to accept mail right now. Try again later."]}
     else
       banner = [hostname, " ESMTP"]
-      state = %{}
-      {:ok, banner, state}
+      {:ok, banner, %{}}
     end
   end
 
@@ -45,7 +48,25 @@ defmodule SMTPRecv.SMTPServer do
       "Finished DATA handling."
     end)
 
+    send_to_db(data_parsed)
+
     {:ok, data, state}
+  end
+
+  def send_to_db(data) do
+    h = Changeset.change(%Header{})
+
+    headers = Map.get(data, :headers)
+              |> Map.delete("to")
+              |> Map.delete("date")
+
+    for {key, val} <- headers do
+      h_key = Changeset.change(%HeaderKey{}, key: key)
+      h_value = Changeset.change(%HeaderValue{}, value: val)
+      h_with = %Header{key_id: h_key, value_id: h_value}    
+
+      Repo.insert!(h_with)
+    end
   end
 
   def handle_EHLO(hostname, extensions, state) do
@@ -115,10 +136,10 @@ defmodule SMTPRecv.SMTPServer do
   end
 
   def parse_email(data) when is_binary(data) do
-    if String.contains?(data, "\r") == false do
-      data |> convert_crlf() |> RFC2822.parse()
-    else
+    if String.contains?(data, "\r") do
       data |> RFC2822.parse()
+    else
+      data |> convert_crlf() |> RFC2822.parse()
     end
   end
 

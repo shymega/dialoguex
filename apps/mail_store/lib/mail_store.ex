@@ -1,4 +1,9 @@
 defmodule MailStore do
+
+  alias MailStore.DB.Repo
+  alias MailStore.DB.Models.{Header, HeaderKey, HeaderValue}
+  alias Ecto.Changeset
+
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,8 +13,7 @@ defmodule MailStore do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Starts a worker by calling: MailStore.Worker.start_link(arg)
-      # {MailStore.Worker, arg},
+      {MailStore.DB.Repo, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

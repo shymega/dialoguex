@@ -17,8 +17,8 @@ defmodule Dialoguex.MixProject do
   defp deps do
     [
       {:distillery, "~> 1.5"},
-      {:edeliver, "~> 1.4"},
-      {:credo, "~> 0.9.0-rc1", only: [:dev, :test], runtime: false}
+      {:edeliver, "~> 1.5"},
+      {:credo, "~> 0.9.0", only: [:dev, :test], runtime: false}
     ]
   end
 end
