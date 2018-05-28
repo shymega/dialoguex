@@ -2,20 +2,18 @@ defmodule MailStore.DB.Models.Header do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias MailStore.DB.Models.{HeaderKey, HeaderValue}
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
 
   schema "headers" do
-    belongs_to :key, HeaderKey
-    belongs_to :value, HeaderValue
-
-    timestamps()
+    has_one :header_key, MailStore.DB.Models.HeaderKey
+    has_one :header_value, MailStore.DB.Models.HeaderValue
   end
 
-  @required_fields ~w(key value)
-  @optional_fields ~w()
+  @fields ~w(header_key header_value)
 
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, @fields)
   end
 end

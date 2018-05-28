@@ -2,18 +2,19 @@ defmodule MailStore.DB.Models.HeaderKey do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key {:id, :binary_id, autogenerate: true}
+  @foreign_key_type :binary_id
+
   schema "header_keys" do
     field :key, :string
-
-    timestamps()
+    belongs_to :header, MailStore.DB.Models.Header
   end
 
-  @required_fields ~w(key)
-  @optional_fields ~w()
+  @fields ~w(key)
 
-  def changeset(%__MODULE__{} = h_key, params) do
-    h_key
-    |> cast(params, @required_fields, @optional_fields)
-    |> unique_constraint(:key, message: "Oh dear; this key is already in use.")
+  def changeset(model, params \\ %{}) do
+    model
+    |> cast(params, @fields)
+    |> unique_constraint(:key)
   end
 end

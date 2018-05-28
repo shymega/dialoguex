@@ -6,11 +6,6 @@ defmodule SMTPRecv.SMTPServer do
 
   alias Mail.Parsers.RFC2822
   require Logger
-  require IEx
-
-  alias Ecto.Changeset
-  alias MailStore.DB.Repo
-  alias MailStore.DB.Models.{Header, HeaderKey, HeaderValue}
 
   @behaviour :gen_smtp_server_session
 
@@ -28,7 +23,6 @@ defmodule SMTPRecv.SMTPServer do
   def handle_DATA(_from, _to, data, state) do
     Logger.debug(fn -> "Received DATA message. Processing." end)
     Logger.debug(fn -> "Parsing message." end)
-    data_parsed = parse_email(data)
     Logger.debug(fn -> "Message parsed!" end)
 
     Logger.debug(fn ->
@@ -37,7 +31,7 @@ defmodule SMTPRecv.SMTPServer do
 
     state =
       state
-      |> Map.put(:message, data_parsed)
+      |> Map.put(:parsed, parse_email(data))
       |> Map.put(:raw, data)
 
     Logger.debug(fn ->
@@ -48,25 +42,7 @@ defmodule SMTPRecv.SMTPServer do
       "Finished DATA handling."
     end)
 
-    send_to_db(data_parsed)
-
     {:ok, data, state}
-  end
-
-  def send_to_db(data) do
-    h = Changeset.change(%Header{})
-
-    headers = Map.get(data, :headers)
-              |> Map.delete("to")
-              |> Map.delete("date")
-
-    for {key, val} <- headers do
-      h_key = Changeset.change(%HeaderKey{}, key: key)
-      h_value = Changeset.change(%HeaderValue{}, value: val)
-      h_with = %Header{key_id: h_key, value_id: h_value}    
-
-      Repo.insert!(h_with)
-    end
   end
 
   def handle_EHLO(hostname, extensions, state) do
@@ -118,7 +94,7 @@ defmodule SMTPRecv.SMTPServer do
       "Received VRFY request for address: #{address}"
     end)
 
-    {["500 error: wtf is : VRFY?"], state}
+    {["500 Error: command not recognized : VRFY"], state}
   end
 
   def handle_other(command, _args, state) do

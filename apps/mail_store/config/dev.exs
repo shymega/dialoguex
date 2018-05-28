@@ -9,5 +9,5 @@ config :mail_store, MailStore.DB.Repo,
   adapter: Ecto.Adapters.Postgres,
   hostname: "localhost",
   database: "mailstore_dev",
-  username: "mailstore",
-  password: "mailstore"
+  username: "postgres",
+  password: "postgres."

@@ -1,9 +1,4 @@
 defmodule MailStore do
-
-  alias MailStore.DB.Repo
-  alias MailStore.DB.Models.{Header, HeaderKey, HeaderValue}
-  alias Ecto.Changeset
-
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
