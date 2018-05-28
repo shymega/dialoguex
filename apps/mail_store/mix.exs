@@ -40,8 +40,8 @@ defmodule MailStore.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ecto, "==2.2.8"},
-      {:postgrex, "==0.13.3"}
+      {:ecto, "~> 2.2"},
+      {:postgrex, "~> 0.13.5"}
     ]
   end
 end
