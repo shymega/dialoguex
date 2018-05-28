@@ -1,0 +1,51 @@
+> iex -S mix
+Erlang/OTP 20 [erts-9.3.1] [source] [64-bit] [smp:4:4] [ds:4:4:10] [async-threads:10] [hipe] [kernel-poll:false]
+
+Interactive Elixir (1.6.4) - press Ctrl+C to exit (type h() ENTER for help)
+iex(1)> alias MailStore.DB.Models.{Header, HeaderKey, HeaderValue}        
+[MailStore.DB.Models.Header, MailStore.DB.Models.HeaderKey,
+ MailStore.DB.Models.HeaderValue]
+iex(2)> alias MailStore.DB.Repo                                           
+MailStore.DB.Repo
+(search)`': 
+13:58:30.719 [error] Postgrex.Protocol (#PID<0.199.0>) timed out because it was handshaking for longer than 15000ms
+h_k =': h_k = HeaderKey.changeset(%HeaderKey{}, %{key: "From"})
+#Ecto.Changeset<
+  action: nil,
+  changes: %{key: "From"},
+  errors: [],
+  data: #MailStore.DB.Models.HeaderKey<>,
+  valid?: true
+>
+(search)`h_v =': h_v = HeaderValue.changeset(%HeaderValue{}, %{value: "shymega@example.com"})
+#Ecto.Changeset<
+  action: nil,
+  changes: %{value: "shymega@example.com"},
+  errors: [],
+  data: #MailStore.DB.Models.HeaderValue<>,
+  valid?: true
+>
+(search)`Repo.': Repo.insert(%Header{header_key: h_k, header_value: h_v})
+m
+13:58:37.140 [debug] QUERY OK db=2.2ms
+begin []
+m
+13:58:37.150 [debug] QUERY OK db=1.4ms
+INSERT INTO "headers" ("id") VALUES ($1) [<<221, 82, 214, 155, 121, 12, 70, 31, 148, 53, 94, 136, 51, 114, 45, 144>>]
+ 
+13:58:37.154 [debug] QUERY OK db=1.3ms
+INSERT INTO "header_values" ("header_id","value","id") VALUES ($1,$2,$3) [<<221, 82, 214, 155, 121, 12, 70, 31, 148, 53, 94, 136, 
+51, 114, 45, 144>>, "shymega@example.com", <<179, 39, 179, 178, 119, 247, 73, 112, 180, 82, 76, 26, 209, 147, 88, 161>>]
+ 
+13:58:37.154 [debug] QUERY OK db=0.2ms
+rollback []
+** (UndefinedFunctionError) function Ecto.Changeset.__schema__/1 is undefined or private
+    (ecto) Ecto.Changeset.__schema__(:primary_key)
+    (ecto) lib/ecto.ex:409: Ecto.primary_key/1
+    (ecto) lib/ecto.ex:422: Ecto.primary_key!/1
+    (ecto) lib/ecto/association.ex:377: Ecto.Association.maybe_replace_one!/5
+    (ecto) lib/ecto/association.ex:323: Ecto.Association.on_repo_change/6
+    (elixir) lib/enum.ex:1899: Enum."-reduce/3-lists^foldl/2-0-"/3
+    (ecto) lib/ecto/association.ex:301: Ecto.Association.on_repo_change/3
+    (ecto) lib/ecto/repo/schema.ex:708: Ecto.Repo.Schema.process_children/4
+
