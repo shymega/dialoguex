@@ -15,8 +15,13 @@ defmodule MailStore.DB.Schemas.Header do
   @required_fields ~w()
   @optional_fields ~w()
 
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
+    IO.inspect(params)
+    IO.inspect(model)
+
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [])
+    |> cast_assoc(:header_key, with: &HeaderKey.changeset/2, required: true)
+    |> cast_assoc(:header_value, with: &HeaderValue.changeset/2, required: true)
   end
 end
