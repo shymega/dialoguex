@@ -10,4 +10,4 @@ config :mail_store, MailStore.DB.Repo,
   hostname: "localhost",
   database: "mailstore_dev",
   username: "postgres",
-  password: "postgres."
+  password: "postgres"

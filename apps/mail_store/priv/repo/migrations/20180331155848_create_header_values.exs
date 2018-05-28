@@ -4,7 +4,7 @@ defmodule MailStore.Repo.Migrations.CreateHeaderValues do
   def change do
     create table(:header_values, primary_key: false) do
       add :id, :uuid, primary_key: true
-      add :value, :string, null: false
+      add :values, :string, null: false
     end
   end
 end
