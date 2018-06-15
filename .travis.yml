@@ -1,0 +1,14 @@
+language: elixir
+elixir: '1.6'
+otp_release: '20.0'
+
+script:
+  - mix credo --strict
+  - mix test
+
+notifications:
+  irc:
+    channels:
+      - "ircs://tinet.org.uk:6697/#coding"
+    on_success: never
+    on_failure: always
