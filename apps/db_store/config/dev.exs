@@ -8,6 +8,7 @@ config :db_store,
 config :db_store, DBStore.DB.Repo,
   adapter: Ecto.Adapters.Postgres,
   hostname: "localhost",
+  port: 5432,
   database: "dialoguex_dev",
   username: "dialoguex",
   password: "password"
