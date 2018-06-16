@@ -8,17 +8,15 @@ defmodule DBStore.DB.Schemas.HeaderValue do
     field :header_value, :string
     field :header_value_hash, :string, size: 256
 
-    belongs_to :header, Header
+    has_one :header, Header
 
     timestamps()
   end
 
-  @required_fields ~w(header_value)
-  @optional_fields ~w()
-
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> unique_constraint(:header_value)
+    |> cast(params, :header_value)
+    |> validate_required(:header_value)
+    |> unique_constraint(:header_value, message: "Duplicate value value.")
   end
 end

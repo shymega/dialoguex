@@ -7,17 +7,15 @@ defmodule DBStore.DB.Schemas.HeaderName do
   schema "header_names" do
     field :header_name, :string
 
-    belongs_to :header, Header
+    has_one :header, Header
 
     timestamps()
   end
 
-  @required_fields ~w(header_name)
-  @optional_fields ~w()
-
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> unique_constraint(:header_name)
+    |> cast(params, :header_name)
+    |> validate_required(:header_name)
+    |> unique_constraint(:header_name, message: "Duplicate value.")
   end
 end

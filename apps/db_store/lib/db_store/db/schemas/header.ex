@@ -6,19 +6,19 @@ defmodule DBStore.DB.Schemas.Header do
   alias DBStore.DB.Schemas.HeaderValue
 
   schema "headers" do
-    has_one :header_name, HeaderName
-    has_one :header_value, HeaderValue
+    belongs_to :header_name, HeaderName
+    belongs_to :header_value, HeaderValue
 
     timestamps()
   end
 
-  @required_fields ~w(header_name, header_value)
-  @optional_fields ~w()
+  @required_fields ~w(header_name header_value)
 
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> foreign_key_constraint(:header_name)
-    |> foreign_key_constraint(:header_value)
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:header_name, message: "Failed to add duplicate entry. This is normal.")
+    |> unique_constraint(:header_value, message: "Failed to add duplicate entry. This is normal.")
     end
 end
