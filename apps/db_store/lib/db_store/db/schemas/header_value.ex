@@ -13,10 +13,13 @@ defmodule DBStore.DB.Schemas.HeaderValue do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}) do
+  @required_fields ~w(header_value header_value-hash)a
+
+  def changeset(model, params \\ :empty) do
     model
-    |> cast(params, :header_value)
-    |> validate_required(:header_value)
-    |> unique_constraint(:header_value, message: "Duplicate value value.")
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:header_value, message: "Duplicate value for table `header_value`. This is not a fatal error.")
+    |> unique_constraint(:header_value_hash, message: "Duplicate hash for table `header_value`. This is not a fatal error.")
   end
 end

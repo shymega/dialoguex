@@ -12,13 +12,11 @@ defmodule DBStore.DB.Schemas.Header do
     timestamps()
   end
 
-  @required_fields ~w(header_name header_value)
+  @required_fields ~w(header_name header_value)a
 
-  def changeset(model, params \\ %{}) do
+  def changeset(model, params \\ :empty) do
     model
     |> cast(params, @required_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:header_name, message: "Failed to add duplicate entry. This is normal.")
-    |> unique_constraint(:header_value, message: "Failed to add duplicate entry. This is normal.")
     end
 end

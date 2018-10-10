@@ -12,10 +12,12 @@ defmodule DBStore.DB.Schemas.HeaderName do
     timestamps()
   end
 
-  def changeset(model, params \\ %{}) do
+  @required_fields ~w(header_name)a
+
+  def changeset(model, params \\ :empty) do
     model
-    |> cast(params, :header_name)
-    |> validate_required(:header_name)
-    |> unique_constraint(:header_name, message: "Duplicate value.")
+    |> cast(params, @required_fields)
+    |> validate_required(@required_fields)
+    |> unique_constraint(:header_name, message: "Duplicate value for table `header_names`. This is not a fatal error.")
   end
 end
