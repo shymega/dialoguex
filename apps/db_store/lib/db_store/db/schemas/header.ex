@@ -6,8 +6,8 @@ defmodule DBStore.DB.Schemas.Header do
   alias DBStore.DB.Schemas.HeaderValue
 
   schema "headers" do
-    belongs_to :header_name, HeaderName
-    belongs_to :header_value, HeaderValue
+    belongs_to(:header_name, HeaderName)
+    belongs_to(:header_value, HeaderValue)
 
     timestamps()
   end
@@ -18,5 +18,5 @@ defmodule DBStore.DB.Schemas.Header do
     model
     |> cast(params, @required_fields)
     |> validate_required(@required_fields)
-    end
+  end
 end

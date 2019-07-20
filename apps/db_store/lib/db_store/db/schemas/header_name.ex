@@ -5,9 +5,9 @@ defmodule DBStore.DB.Schemas.HeaderName do
   alias DBStore.DB.Schemas.Header
 
   schema "header_names" do
-    field :header_name, :string
+    field(:header_name, :string)
 
-    has_one :header, Header
+    has_one(:header, Header)
 
     timestamps()
   end
@@ -18,6 +18,8 @@ defmodule DBStore.DB.Schemas.HeaderName do
     model
     |> cast(params, @required_fields)
     |> validate_required(@required_fields)
-    |> unique_constraint(:header_name, message: "Duplicate value for table `header_names`. This is not a fatal error.")
+    |> unique_constraint(:header_name,
+      message: "Duplicate value for table `header_names`. This is not a fatal error."
+    )
   end
 end
