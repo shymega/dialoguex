@@ -94,7 +94,7 @@ defmodule SMTPRecv.SMTPServer do
       "Received VRFY request for address: #{address}"
     end)
 
-    {["500 Error: command not recognized : VRFY"], state}
+    {:ok, ["500: Command not recognised."], state}
   end
 
   def handle_other(command, _args, state) do
@@ -111,7 +111,7 @@ defmodule SMTPRecv.SMTPServer do
     {:ok, state}
   end
 
-  def parse_email(data) when is_binary(data) do
+  defp parse_email(data) when is_binary(data) do
     if String.contains?(data, "\r") do
       data |> RFC2822.parse()
     else
@@ -119,7 +119,8 @@ defmodule SMTPRecv.SMTPServer do
     end
   end
 
-  def convert_crlf(text) when is_binary(text) do
-    text |> String.replace("\n", "\r\n")
+  defp convert_crlf(text) when is_binary(text) do
+    text
+    |> String.replace("\n", "\r\n")
   end
 end
