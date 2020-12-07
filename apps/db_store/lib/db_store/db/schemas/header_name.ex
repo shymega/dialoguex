@@ -12,7 +12,7 @@ defmodule DBStore.DB.Schemas.HeaderName do
     timestamps()
   end
 
-  @required_fields ~w(header_name)a
+  @required_fields ~w(header_name)
 
   def changeset(model, params \\ :empty) do
     model
